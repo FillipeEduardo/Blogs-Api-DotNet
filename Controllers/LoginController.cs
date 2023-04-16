@@ -1,16 +1,24 @@
-﻿using Blogs_Api_DotNet.DTO;
+﻿using Blogs_Api_DotNet.Abstractions.Services;
+using Blogs_Api_DotNet.DTO;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Blogs_Api_DotNet.Controllers
+namespace Blogs_Api_DotNet.Controllers;
+
+[ApiController]
+[Route("login")]
+public class LoginController : ControllerBase
 {
-    [ApiController]
-    [Route("login")]
-    public class LoginController : ControllerBase
+    private ILoginService _loginService;
+
+    public LoginController(ILoginService loginService)
     {
-        [HttpPost]
-        public IActionResult Login(UserDTO userDTO)
-        {
-            return Ok(userDTO);
-        }
+        _loginService = loginService;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Login(UserDTO userDTO)
+    {
+        await _loginService.Login(userDTO);
+        return Ok(userDTO);
     }
 }
