@@ -4,6 +4,6 @@ namespace Blogs_Api_DotNet.Abstractions.Services
 {
     public interface ILoginService
     {
-        Task Login(UserDTO userDTO);
+        Task<string> Login(UserDTO userDTO);
     }
 }

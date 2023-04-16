@@ -8,6 +8,7 @@ builder.Services.AddControllers();
 builder.Services.AddDataBase(builder.Configuration);
 builder.Services.AddValidators();
 builder.Services.AddServices();
+builder.Services.AddAutenticacao(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -24,6 +25,7 @@ app.UseMiddleware(typeof(GlobalErrorMiddleware));
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
