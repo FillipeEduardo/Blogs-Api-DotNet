@@ -1,4 +1,5 @@
-﻿using Blogs_Api_DotNet.Abstractions.Auth;
+﻿using AutoMapper;
+using Blogs_Api_DotNet.Abstractions.Auth;
 using Blogs_Api_DotNet.Abstractions.Services;
 using Blogs_Api_DotNet.Data;
 using Blogs_Api_DotNet.DTO;
@@ -12,16 +13,18 @@ public class LoginService : ILoginService
 {
     private readonly AppDbContext _context;
     private readonly ITokenService _tokenService;
+    private readonly IMapper _mapper;
 
-    public LoginService(AppDbContext context, ITokenService tokenService)
+    public LoginService(AppDbContext context, ITokenService tokenService, IMapper mapper)
     {
         _context = context;
         _tokenService = tokenService;
+        _mapper = mapper;
     }
 
     public async Task<string> Login(UserDTO userDTO)
     {
-        var user = new User { Email = userDTO.Email, Password = userDTO.Password };
+        User user = _mapper.Map<User>(userDTO);
         var data = await _context.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
         if (data is null || user.Password != data.Password) throw new DbNullException("Invalid fields");
         return _tokenService.GenerateToken(data);

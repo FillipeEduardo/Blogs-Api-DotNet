@@ -22,6 +22,10 @@ namespace Blogs_Api_DotNet.Middlewares
             {
                 await HandlerErrorAsync(context, ex, 400);
             }
+            catch (DuplicatedUserException ex)
+            {
+                await HandlerErrorAsync(context, ex, 409);
+            }
             catch (Exception ex)
             {
                 await HandlerErrorAsync(context, ex, 500);

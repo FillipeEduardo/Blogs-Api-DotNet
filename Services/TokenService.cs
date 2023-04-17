@@ -10,10 +10,17 @@ namespace Blogs_Api_DotNet.Services;
 public class TokenService : ITokenService
 
 {
+    private readonly IConfiguration _config;
+
+    public TokenService(IConfiguration config)
+    {
+        _config = config;
+    }
+
     public string GenerateToken(User user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes("dfgd¨96bfgbtf9¨¨(87&&¨B&hgG(*¨T¨(¨TGB(¨*&¨45clk7749324knj32b4234jf2348*B*n*@6n*(%B%f%@fv5@Fv886");
+        var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new Claim[]

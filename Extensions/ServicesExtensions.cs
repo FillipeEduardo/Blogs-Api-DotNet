@@ -1,5 +1,6 @@
 ﻿using Blogs_Api_DotNet.Abstractions.Auth;
 using Blogs_Api_DotNet.Abstractions.Services;
+using Blogs_Api_DotNet.DTO.Mappings;
 using Blogs_Api_DotNet.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +14,8 @@ public static class ServicesExtensions
     {
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ILoginService, LoginService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddAutoMapper(typeof(BlogProfile));
         return services;
     }
 
