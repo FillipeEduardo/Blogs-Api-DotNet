@@ -10,7 +10,9 @@ namespace Blogs_Api_DotNet.Extensions
         public static IServiceCollection AddValidators(this IServiceCollection services)
         {
             services.AddFluentValidationAutoValidation();
-            return services.AddScoped<IValidator<UserDTO>, UserValidator>();
+            services.AddScoped<IValidator<UserDTO>, UserValidator>();
+            services.AddScoped<IValidator<CategoryDTO>, CategoryValidator>();
+            return services;
         }
     }
 }

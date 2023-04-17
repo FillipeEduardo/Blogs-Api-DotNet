@@ -15,6 +15,7 @@ public static class ServicesExtensions
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ILoginService, LoginService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ICategoryService, CategoryService>();
         services.AddAutoMapper(typeof(BlogProfile));
         return services;
     }
