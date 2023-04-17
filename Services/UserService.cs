@@ -6,6 +6,7 @@ using Blogs_Api_DotNet.DTO;
 using Blogs_Api_DotNet.Exceptions;
 using Blogs_Api_DotNet.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Blogs_Api_DotNet.Services
 {
@@ -30,6 +31,17 @@ namespace Blogs_Api_DotNet.Services
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
             return _tokenService.GenerateToken(user);
+        }
+
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await _context.Users.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<User> GetByFunc(Expression<Func<User, bool>> func)
+        {
+            var result = await _context.Users.FirstOrDefaultAsync(func);
+            return result is null ? throw new DbNullException("User does not exist") : result;
         }
     }
 }
