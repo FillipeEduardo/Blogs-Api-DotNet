@@ -48,11 +48,11 @@ namespace Blogs_Api_DotNet.Data.Mappings
                 "posts_categories",
                 post => post.HasOne<Category>()
                 .WithMany()
-                .HasForeignKey("post_id")
+                .HasForeignKey("category_id")
                 .OnDelete(DeleteBehavior.Cascade),
                 category => category.HasOne<BlogPost>()
                 .WithMany()
-                .HasForeignKey("category_id")
+                .HasForeignKey("post_id")
                 .OnDelete(DeleteBehavior.Cascade)
                 );
         }

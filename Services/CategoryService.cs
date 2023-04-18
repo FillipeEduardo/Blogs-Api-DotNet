@@ -33,4 +33,9 @@ public class CategoryService : ICategoryService
         var result = await _context.Categories.FirstOrDefaultAsync(func);
         return result is null ? throw new DbNullException("Not Found") : result;
     }
+
+    public async Task<List<Category>> GetAll()
+    {
+        return await _context.Categories.AsNoTracking().ToListAsync();
+    }
 }

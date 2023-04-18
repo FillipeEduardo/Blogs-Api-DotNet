@@ -29,4 +29,10 @@ public class CategoryController : ControllerBase
         var result = await _categoryService.PostCategory(categoryDTO);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        return Ok(await _categoryService.GetAll());
+    }
 }

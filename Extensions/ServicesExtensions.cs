@@ -16,6 +16,7 @@ public static class ServicesExtensions
         services.AddScoped<ILoginService, LoginService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<IBlogPostService, BlogPostService>();
         services.AddAutoMapper(typeof(BlogProfile));
         return services;
     }

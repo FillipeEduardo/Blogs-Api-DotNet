@@ -8,5 +8,6 @@ namespace Blogs_Api_DotNet.Abstractions.Services
     {
         Task<Category> PostCategory(CategoryDTO categoryDTO);
         Task<Category> GetByFunc(Expression<Func<Category, bool>> func);
+        Task<List<Category>> GetAll();
     }
 }
