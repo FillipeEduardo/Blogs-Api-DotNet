@@ -18,7 +18,7 @@ public class BlogPostService : IBlogPostService
         _userService = userService;
     }
 
-    public async Task<BlogPost> CreatePost(BlogPostDTO blogPostDTO, string email)
+    public async Task<BlogPost> CreatePost(BlogPostDTO blogPostDTO, int userId)
     {
         List<Category> categories = new();
         foreach (var id in blogPostDTO.CategoryIds)
@@ -27,7 +27,7 @@ public class BlogPostService : IBlogPostService
             if (category is null) throw new DbNullException("one or more \"categoryIds\" not found");
             categories.Add(category);
         }
-        var user = await _userService.GetByFunc(x => x.Email == email);
+        var user = await _userService.GetByFunc(x => x.Id == userId);
         var post = new BlogPost
         {
             Title = blogPostDTO.Title,
@@ -44,7 +44,11 @@ public class BlogPostService : IBlogPostService
 
     public async Task<List<BlogPost>> GetAll()
     {
-        return _context.BlogPosts.Include(x => x.User).Include(x => x.Categories).ToList();
+        return await _context.BlogPosts
+            .Include(x => x.User)
+            .Include(x => x.Categories)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     public async Task<BlogPost> GetById(int id)
@@ -56,17 +60,44 @@ public class BlogPostService : IBlogPostService
         return result == null ? throw new DbNullException("Post does not exist") : result;
     }
 
-    public async Task<BlogPost> UpdatePost(int id, PostUpdateDTO postUpdateDTO, string email)
+    public async Task<BlogPost> UpdatePost(int id, PostUpdateDTO postUpdateDTO, int userId)
     {
         var post = await _context.BlogPosts
             .Include(x => x.User)
             .Include(x => x.Categories)
             .FirstOrDefaultAsync(x => x.Id == id);
         if (post == null) throw new DbNullException("Post does not exist");
-        if (post.User.Email != email) throw new UnauthorizedAccessException("Unauthorized user");
+        if (post.UserId != userId) throw new UnauthorizedAccessException("Unauthorized user");
         post.Content = postUpdateDTO.Content;
         post.Title = postUpdateDTO.Title;
+        post.Updated = DateTime.UtcNow;
+        _context.BlogPosts.Update(post);
         await _context.SaveChangesAsync();
         return post;
+    }
+
+    public async Task DeletePost(int id, int userId)
+    {
+        var post = await _context.BlogPosts.FindAsync(id);
+        if (post is null) throw new DbNullException("Post does not exist");
+        if (post.UserId != userId) throw new UnauthorizedAccessException("Unauthorized user");
+        _context.BlogPosts.Remove(post);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<BlogPost>> SearchByTerm(string term)
+    {
+        var posts = await _context.BlogPosts
+            .Include(x => x.User)
+            .Include(x => x.Categories)
+            .Where(x => x.Title.Contains(term))
+            .ToListAsync();
+        if (posts.Count > 0) return posts;
+        posts = await _context.BlogPosts
+            .Include(x => x.User)
+            .Include(x => x.Categories)
+            .Where(x => x.Content.Contains(term))
+            .ToListAsync();
+        return posts;
     }
 }

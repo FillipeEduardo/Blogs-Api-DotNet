@@ -43,5 +43,13 @@ namespace Blogs_Api_DotNet.Services
             var result = await _context.Users.FirstOrDefaultAsync(func);
             return result is null ? throw new DbNullException("User does not exist") : result;
         }
+
+        public async Task DeleteAccount(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) throw new DbNullException("User does not exist");
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }

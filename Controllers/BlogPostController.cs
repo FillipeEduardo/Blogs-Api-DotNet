@@ -2,6 +2,7 @@
 using Blogs_Api_DotNet.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Blogs_Api_DotNet.Controllers;
 
@@ -20,7 +21,8 @@ public class BlogPostController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreatePost(BlogPostDTO blogPostDTO)
     {
-        var result = await _service.CreatePost(blogPostDTO, User.Identity.Name);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var result = await _service.CreatePost(blogPostDTO, userId);
         return Ok(result);
     }
 
@@ -41,6 +43,21 @@ public class BlogPostController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(PostUpdateDTO post, int id)
     {
-        return Ok(await _service.UpdatePost(id, post, User.Identity.Name));
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        return Ok(await _service.UpdatePost(id, post, userId));
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeletePost(int id)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        await _service.DeletePost(id, userId);
+        return StatusCode(204);
+    }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchByTerm([FromQuery] string q)
+    {
+        return Ok(await _service.SearchByTerm(q));
     }
 }

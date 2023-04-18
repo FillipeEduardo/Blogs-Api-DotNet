@@ -9,5 +9,6 @@ namespace Blogs_Api_DotNet.Abstractions.Services
         Task<string> PostUser(UserDTO userDTO);
         Task<List<User>> GetAllUsers();
         Task<User> GetByFunc(Expression<Func<User, bool>> func);
+        Task DeleteAccount(int id);
     }
 }

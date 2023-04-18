@@ -2,6 +2,7 @@
 using Blogs_Api_DotNet.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Blogs_Api_DotNet.Controllers;
 
@@ -35,5 +36,13 @@ public class UserController : ControllerBase
     public async Task<IActionResult> GetById(int id)
     {
         return Ok(await _userService.GetByFunc(x => x.Id == id));
+    }
+
+    [HttpDelete("me")]
+    public async Task<IActionResult> DeleteAccount()
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        await _userService.DeleteAccount(userId);
+        return StatusCode(204);
     }
 }
