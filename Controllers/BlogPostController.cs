@@ -23,4 +23,24 @@ public class BlogPostController : ControllerBase
         var result = await _service.CreatePost(blogPostDTO, User.Identity.Name);
         return Ok(result);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var result = await _service.GetAll();
+        return Ok(result);
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var result = await _service.GetById(id);
+        return Ok(result);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(PostUpdateDTO post, int id)
+    {
+        return Ok(await _service.UpdatePost(id, post, User.Identity.Name));
+    }
 }

@@ -26,6 +26,10 @@ namespace Blogs_Api_DotNet.Middlewares
             {
                 await HandlerErrorAsync(context, ex, 409);
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                await HandlerErrorAsync(context, ex, 401);
+            }
             catch (Exception ex)
             {
                 await HandlerErrorAsync(context, ex, 500);
