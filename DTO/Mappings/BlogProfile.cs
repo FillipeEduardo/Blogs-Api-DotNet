@@ -9,6 +9,7 @@ namespace Blogs_Api_DotNet.DTO.Mappings
         {
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<User, LoginDTO>().ReverseMap();
         }
     }
 }

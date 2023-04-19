@@ -11,15 +11,15 @@ builder.Services.AddServices();
 builder.Services.AddAutenticacao(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerWithJwt();
 
 var app = builder.Build();
 
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseMiddleware(typeof(GlobalErrorMiddleware));
 

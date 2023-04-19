@@ -22,9 +22,9 @@ public class LoginService : ILoginService
         _mapper = mapper;
     }
 
-    public async Task<string> Login(UserDTO userDTO)
+    public async Task<string> Login(LoginDTO loginDTO)
     {
-        User user = _mapper.Map<User>(userDTO);
+        User user = _mapper.Map<User>(loginDTO);
         var data = await _context.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
         if (data is null || user.Password != data.Password) throw new DbNullException("Invalid fields");
         return _tokenService.GenerateToken(data);

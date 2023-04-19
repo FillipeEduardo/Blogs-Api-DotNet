@@ -23,7 +23,7 @@ public class BlogPostController : ControllerBase
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         var result = await _service.CreatePost(blogPostDTO, userId);
-        return Ok(result);
+        return Created($"post/{result.Id}", result);
     }
 
     [HttpGet]
